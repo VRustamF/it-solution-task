@@ -1,14 +1,11 @@
-from lib2to3.fixes.fix_input import context
-from random import choices
-from shlex import quote
-
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView
-from django.views import View
-from django.db.models import Count, Sum
+from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 from app_quotes.models import Quote
+
+from random import choices
 
 # Create your views here.
 
@@ -32,28 +29,56 @@ class HomeView(ListView):
 
 
 
-class NewQuoteView(View):
+class NewQuoteView(CreateView):
+    model = Quote
     template_name = 'app_quotes/new_quote.html'
+    fields = ['text', 'source', 'weight']
+    success_url = reverse_lazy('quotes:home')
 
-    def get(self, request):
-        return render(request, self.template_name)
-
-    def post(self, request):
-        text = request.POST.get('text')
-        source = request.POST.get('source')
-        weight = request.POST.get('weight') or 1
-
+    def form_valid(self, form):
+        text = form.cleaned_data['text']
+        source = form.cleaned_data['source']
         quotes = Quote.objects.all()
 
-        if (not quotes.filter(text=text, source=source).exists() and
-                quotes.filter(source=source).aggregate(Count('source'))['source__count'] < 3):
-            new_quote = Quote(text=text, source=source, weight=weight)
-            new_quote.save()
-            messages.success(request, 'Цитата успешно добавлена!')
-        else:
-            messages.error(request, 'Цитата уже существует или лимит для источника достигнут.')
+        if (quotes.filter(text=text, source=source)).exists():
+            messages.error(self.request, message='Цитата уже существует!')
+            return redirect('quotes:home')
 
-        return redirect('quotes:home')
+        elif quotes.filter(source=source).count() >= 3:
+                messages.error(self.request, message='Лимит цитат для этого источника достигнут!')
+                return redirect('quotes:home')
+
+        messages.success(self.request, 'Цитата успешно добавлена!')
+        return super().form_valid(form)
+
+
+
+class EditQuoteView(UpdateView):
+    model = Quote
+    fields = ['text', 'source', 'weight']
+    template_name = 'app_quotes/edit_quote.html'
+    success_url = reverse_lazy('quotes:home')
+
+    def form_valid(self, form):
+        text = form.cleaned_data['text']
+        source = form.cleaned_data['source']
+        quotes = Quote.objects.all()
+
+        orig_quote = quotes.filter(id=self.object.id).first()
+
+        source_changed = orig_quote.source != source
+
+        if (quotes.filter(text=text, source=source)).exists():
+            messages.error(self.request, message='Цитата уже существует!')
+            return redirect('quotes:home')
+
+        elif source_changed:
+            if quotes.filter(source=source).count() >= 3:
+                messages.error(self.request, message='Лимит цитат для этого источника достигнут!')
+                return redirect('quotes:home')
+
+        messages.success(self.request, 'Цитата успешно обновлена!')
+        return super().form_valid(form)
 
 
 
@@ -100,8 +125,3 @@ def process_del_quote(request, quote_id):
     quote.delete()
     messages.success(request, 'Цитата успешно удалена')
     return redirect('quotes:home')
-
-
-
-def process_edit_quote(request, quote_id):
-    pass

@@ -8,11 +8,9 @@
   <section class="add-quote">
       <h2>Редактировать цитату</h2>
       <form method="post">
-        {% csrf_token %}
-        <textarea name="text" placeholder="Текст цитаты" rows="3" required></textarea>
-        <input type="text" name="source" placeholder="Источник" required>
-        <input type="number" name="weight" placeholder="Вес (опционально)" min="1">
-        <button type="submit">Сохранить</button>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Обновить</button>
       </form>
     </section>
 {% endblock %}
