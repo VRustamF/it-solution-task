@@ -8,12 +8,23 @@
   <section class="popular">
       <h2>Популярные цитаты</h2>
       <div class="popular-list">
-        <div class="popular-item">
-          <div>«Пример популярной цитаты»</div>
-          <div class="quote-source">— Источник</div>
-          <div class="likes">Лайков: 15</div>
-        </div>
-        <!-- ещё 9 аналогичных элементов -->
+        {% for quote in quotes %}
+            <div class="popular-item">
+              <div>«{{ quote.text }}»</div>
+              <div class="quote-source">— {{ quote.source }}</div>
+              {% if current_order == 'like' %} <div class="likes">Лайков: {{ quote.like }}</div> {% endif %}
+              {% if current_order == '-like' %} <div class="-likes">Лайков: {{ quote.like }}</div> {% endif %}
+
+              {% if current_order == 'dislike' %} <div class="dislikes">Дизлайков: {{ quote.dislike }}</div> {% endif %}
+              {% if current_order == '-dislike' %} <div class="-dislikes">Дизлайков: {{ quote.dislike }}</div> {% endif %}
+
+              {% if current_order == 'views' %} <div class="views">Просмотров: {{ quote.views }}</div> {% endif %}
+              {% if current_order == '-views' %} <div class="-views">Просмотров: {{ quote.views }}</div> {% endif %}
+
+              {% if current_order == 'weight' %} <div class="views">Вес: {{ quote.weight }}</div> {% endif %}
+              {% if current_order == '-weight' %} <div class="-views">Вес: {{ quote.weight }}</div> {% endif %}
+            </div>
+        {% endfor %}
       </div>
     </section>
 {% endblock %}

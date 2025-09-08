@@ -85,11 +85,21 @@ class EditQuoteView(UpdateView):
 class DashboardView(ListView):
     model = Quote
     template_name = 'app_quotes/dashboard.html'
+    context_object_name = 'quotes'
+    paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
-        context['title'] = 'Дашборд хз'
+        context['title'] = 'Дашборд'
+        context['current_order'] = self.request.GET.get('order', '-like')
         return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        order = self.request.GET.get('order', '-like')
+        if order in ['like', '-like', 'dislike', '-dislike', 'views', '-views', 'weight', '-weight']:
+            queryset = queryset.order_by(order)
+        return queryset
 
 
 
