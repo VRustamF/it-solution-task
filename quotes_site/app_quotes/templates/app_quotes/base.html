@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block title %} {% endblock %}
+  <style>
+    /* Базовая уютная цветовая схема */
+    :root {
+      --bg: #fdf8f4;
+      --card-bg: #fffaf6;
+      --primary: #6b4d3f;
+      --secondary: #c89f91;
+      --accent: #d9714d;
+      --text: #3a2e29;
+    }
+    body {
+      font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: var(--primary);
+      color: #fff;
+    }
+    main {
+      flex: 1;
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .quote-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .quote-card:hover {
+      transform: scale(1.01);
+    }
+    .quote-text {
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+    .quote-source {
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: var(--secondary);
+    }
+    .actions {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .actions button {
+      width: 150px;
+      height: 40px;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      background: var(--secondary);
+      color: #fff;
+      transition: background 0.3s;
+    }
+    .actions button:hover {
+      background: var(--accent);
+    }
+    .counter {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 0.5rem;
+    }
+
+    /* Блок с кнопками под цитатой */
+    .quote-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap; /* На мобильных будет переносить на новую строку */
+    }
+
+    .quote-buttons button,
+    .quote-buttons .form-button button {
+        width: 120px;
+        height: 60px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: var(--secondary);
+        color: #fff;
+        transition: background 0.3s;
+    }
+
+    .quote-buttons button:hover,
+    .quote-buttons .form-button button:hover {
+        background: var(--accent);
+    }
+
+    /* Стили для конкретных кнопок */
+    .quote-buttons .next-quote {
+        background: var(--accent);
+    }
+    .quote-buttons .next-quote:hover {
+        background: var(--primary);
+    }
+
+    .quote-buttons .add-quote {
+        background: var(--accent);
+    }
+    .quote-buttons .add-quote:hover {
+        background: var(--primary);
+    }
+
+    .quote-buttons .dashboard {
+        background: var(--accent);
+    }
+    .quote-buttons .dashboard:hover {
+        background: var(--primary);
+    }
+
+    .quote-buttons .del-quote {
+        background: var(--accent);
+    }
+    .quote-buttons .del-quote:hover {
+        background: var(--primary);
+    }
+
+    .quote-buttons .edit-quote {
+        background: var(--accent);
+    }
+    .quote-buttons .edit-quote:hover {
+        background: var(--primary);
+    }
+
+    /* Для формы с кнопкой удаления */
+    .quote-buttons form {
+        display: inline;
+        margin: 0;
+    }
+
+
+    /* Популярные цитаты */
+    .popular {
+      margin-top: 2rem;
+    }
+    .popular h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .popular-list {
+      display: grid;
+      gap: 1rem;
+    }
+    .popular-item {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .popular-item .likes {
+      font-size: 0.85rem;
+      color: var(--secondary);
+      margin-top: 0.3rem;
+    }
+    /* Форма добавления */
+    form {
+      margin-top: 2rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    form button {
+      width: fit-content;
+      padding: 0.6rem 1.2rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: var(--accent);
+    }
+    /* Адаптивность */
+    @media (max-width: 600px) {
+      .quote-text {
+        font-size: 1.1rem;
+      }
+      .actions button {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="toast" style="display: none; position: fixed; top: 30px; left: 50%; transform: translateX(-50%); min-width: 250px; padding: 16px; border-radius: 7px; color: #fff; font-size: 16px; z-index: 9999;">
+    <script>
+      function showToast(message, isSuccess=true) {
+          var toast = document.getElementById('toast');
+          toast.style.background = isSuccess ? "#4BB543" : "#d62d2d"; // зеленый или красный
+          toast.innerText = message;
+          toast.style.display = "block";
+          setTimeout(function(){
+             toast.style.display = "none";
+          }, 3000);
+      }
+    </script>
+  </div>
+  <header>
+    <h1>Цитатник</h1>
+  </header>
+
+  <main>
+    {% block content %} {% endblock %}
+  </main>
+</body>
+
+</html>

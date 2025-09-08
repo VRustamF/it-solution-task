@@ -1,0 +1,74 @@
+{% extends 'app_quotes/base.html' %}
+
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+  {% if messages %}
+    <script>
+        {% for message in messages %}
+            showToast("{{ message|escapejs }}", "{{ message.tags }}" === "success");
+        {% endfor %}
+    </script>
+  {% endif %}
+  <div class="quote-card">
+    {% if random_quote %}
+      <div class="quote-text">{{ random_quote.text }}</div>
+      <div class="quote-source">— {{ random_quote.source }}</div>
+      <div class="actions">
+          <!-- Кнопка лайка -->
+          <form method="post" action="{% url 'quotes:rate' random_quote.id %}" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action_type" value="like">
+              <button type="submit">👍: {{ random_quote.like }}</button>
+          </form>
+
+          <!-- Кнопка дизлайка -->
+          <form method="post" action="{% url 'quotes:rate' random_quote.id %}" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action_type" value="dislike">
+              <button type="submit">👎: {{ random_quote.dislike }}</button>
+          </form>
+      </div>
+      <div class="counter">Просмотров: <span id="views">{{ random_quote.views }}</span></div>
+    {% else %}
+      <div class="quote-text">У вас пока нет цитат</div>
+      <div class="quote-source">— Источник</div>
+      <div class="actions">
+        <button id="like">👍 Лайк</button>
+        <button id="dislike">👎 Дизлайк</button>
+      </div>
+      <div class="counter">Просмотров: <span id="views">0</span></div>
+    {% endif %}
+    </div>
+
+    <div class="quote-buttons">
+      <button id="next-quote-btn" type="button" class="next-quote" onclick="window.location.href='{% url 'quotes:home' %}'">
+          Следующая цитата
+      </button>
+
+      <button id="add-quote-btn" type="button" class="add-quote" onclick="window.location.href='{% url 'quotes:add_new_quote' %}'">
+          Добавить цитату
+      </button>
+
+       {% if random_quote %}
+           <form method="post" action="{% url 'quotes:del_quote' random_quote.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button id="del-quote-btn" type="submit" class="del-quote"
+                        onclick="return confirm('Вы уверены, что хотите удалить эту цитату?')">
+                    Удалить цитату
+                </button>
+           </form>
+
+           <button id="edit-quote-btn" type="button" class="edit-quote" onclick="window.location.href='{% url 'quotes:edit_quote' random_quote.id %}'">
+                Изменить цитату
+           </button>
+       {% endif %}
+
+      <button id="dashboard-btn" type="button" class="dashboard" onclick="window.location.href='{% url 'quotes:dashboard' %}'">
+          Дашборд
+      </button>
+    </div>
+    </div>
+{% endblock %}

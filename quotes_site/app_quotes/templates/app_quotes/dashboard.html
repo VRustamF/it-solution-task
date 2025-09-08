@@ -1,0 +1,19 @@
+{% extends 'app_quotes/base.html' %}
+
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+  <section class="popular">
+      <h2>Популярные цитаты</h2>
+      <div class="popular-list">
+        <div class="popular-item">
+          <div>«Пример популярной цитаты»</div>
+          <div class="quote-source">— Источник</div>
+          <div class="likes">Лайков: 15</div>
+        </div>
+        <!-- ещё 9 аналогичных элементов -->
+      </div>
+    </section>
+{% endblock %}
