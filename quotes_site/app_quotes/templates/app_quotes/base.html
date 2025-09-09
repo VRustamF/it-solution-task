@@ -38,6 +38,7 @@
       padding: 1rem;
       max-width: 800px;
       margin: auto;
+      align-content: start;
     }
     .quote-card {
       background: var(--card-bg);
@@ -91,7 +92,7 @@
     .quote-buttons {
         display: flex;
         justify-content: center;
-        gap: 1rem;
+        gap: 0.5rem;
         margin-top: 1rem;
         flex-wrap: wrap; /* На мобильных будет переносить на новую строку */
     }
@@ -147,6 +148,13 @@
         background: var(--accent);
     }
     .quote-buttons .edit-quote:hover {
+        background: var(--primary);
+    }
+
+    .quote-buttons .back {
+        background: var(--accent);
+    }
+    .quote-buttons .back:hover {
         background: var(--primary);
     }
 
@@ -221,6 +229,13 @@
       font-size: 0.85rem;
       color: var(--secondary);
       margin-top: 0.3rem;
+    }
+
+    .sort-select select {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
     }
 
     /* Форма добавления */

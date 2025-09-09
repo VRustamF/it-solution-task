@@ -14,7 +14,7 @@
   {% endif %}
   <div class="quote-card">
     {% if random_quote %}
-      <div class="quote-text">{{ random_quote.text }}</div>
+      <div class="quote-text">«{{ random_quote.text }}»</div>
       <div class="quote-source">— {{ random_quote.source }}</div>
       <div class="actions">
           <!-- Кнопка лайка -->
@@ -69,6 +69,5 @@
       <button id="dashboard-btn" type="button" class="dashboard" onclick="window.location.href='{% url 'quotes:dashboard' %}'">
           Дашборд
       </button>
-    </div>
     </div>
 {% endblock %}

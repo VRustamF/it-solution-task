@@ -5,6 +5,24 @@
 {% endblock %}
 
 {% block content %}
+   <div class="sort-select">
+      <form method="get">
+        <select name="order" onchange="this.form.submit()">
+          <option value="-like" {% if current_order == '-like' %}selected{% endif %}>Лайки ↓</option>
+          <option value="like" {% if current_order == 'like' %}selected{% endif %}>Лайки ↑</option>
+
+          <option value="-dislike" {% if current_order == '-dislike' %}selected{% endif %}>Дизлайки ↓</option>
+          <option value="dislike" {% if current_order == 'dislike' %}selected{% endif %}>Дизлайки ↑</option>
+
+          <option value="-views" {% if current_order == '-views' %}selected{% endif %}>Просмотры ↓</option>
+          <option value="views" {% if current_order == 'views' %}selected{% endif %}>Просмотры ↑</option>
+
+          <option value="-weight" {% if current_order == '-weight' %}selected{% endif %}>Вес ↓</option>
+          <option value="weight" {% if current_order == 'weight' %}selected{% endif %}>Вес ↑</option>
+        </select>
+      </form>
+    </div>
+
   <section class="popular">
       <h2>Популярные цитаты</h2>
       <div class="popular-list">
@@ -27,4 +45,10 @@
         {% endfor %}
       </div>
     </section>
+
+    <div class="quote-buttons">
+        <button id="back-btn" type="button" class="back" onclick="window.location.href='{% url 'quotes:home' %}'">
+              Назад
+        </button>
+    </div>
 {% endblock %}
