@@ -124,7 +124,10 @@ def process_rate_quote(request, quote_id):
             session_key) == 'like' else 'Вы уже дизлайкали эту цитату!'
         messages.info(request, message=msg)
 
-    context = {'random_quote': quote}
+    context = {
+        'random_quote': quote,
+        'title': 'Случайная цитата',
+               }
 
     return render(request, template_name='app_quotes/home.html', context=context)
 
