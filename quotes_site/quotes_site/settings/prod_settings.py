@@ -5,7 +5,7 @@ import os
 
 DEBUG = False
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default')
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # PostgreSQL
 DATABASES = {
@@ -25,19 +25,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 # Рекомендации безопасности
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-quotes.ru",
+    "https://www.django-quotes.ru"
+]
 
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-SECURE_HSTS_SECONDS = 0
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
-# SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 X_FRAME_OPTIONS = 'DENY'
 
 
