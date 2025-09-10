@@ -1,11 +1,19 @@
 #!/bin/sh
-echo "⏳ Waiting for database..."
-while ! pg_isready -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
-  sleep 1
-done
-echo "✅ Database is ready!"
 
-python manage.py migrate --noinput --settings=quotes_site.settings.prod_settings
+# Создаем директорию для логов и статики
+mkdir -p /app/logs /app/staticfiles /app/media
+
+# Ждем, пока база данных станет доступной
+echo "Ожидание базы данных..."
+until pg_isready -h "$POSTGRES_HOST" -U "$POSTGRES_USER"; do
+  sleep 2
+done
+
+# Выполняем миграции
+python manage.py migrate --settings=quotes_site.settings.prod_settings
+
+# Собираем статику
 python manage.py collectstatic --noinput --settings=quotes_site.settings.prod_settings
 
+# Запускаем Gunicorn
 exec gunicorn quotes_site.wsgi:application --bind 0.0.0.0:8000
