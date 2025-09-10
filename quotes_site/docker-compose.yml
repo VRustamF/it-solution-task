@@ -1,17 +1,18 @@
-version: "3.9"
-
 services:
   web:
     build: .
-    command: gunicorn quotes_site.wsgi:application --bind 0.0.0.0:8000
+    command: sh ./entrypoint.sh
     volumes:
       - .:/app
     env_file:
       - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=quotes_site.settings.prod_settings
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15
@@ -19,6 +20,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

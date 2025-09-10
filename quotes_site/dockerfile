@@ -12,11 +12,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Устанавливаем PostgreSQL client для pg_isready
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
 # Копируем проект
 COPY . .
 
 # Собираем статику
-RUN python manage.py collectstatic --noinput
-
-# Запускаем через gunicorn
-CMD ["gunicorn", "quotes_site.wsgi:application", "--bind", "0.0.0.0:8000"]
+RUN python manage.py collectstatic --noinput --settings=quotes_site.settings.prod_settings

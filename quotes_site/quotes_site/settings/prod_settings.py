@@ -1,12 +1,11 @@
 from .base_settings import *
 import os
-from pathlib import Path
 
 
 
 DEBUG = False
 SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default')
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # PostgreSQL
 DATABASES = {
@@ -26,10 +25,16 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 # Рекомендации безопасности
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_HSTS_SECONDS = 0
+
+# SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -40,6 +45,9 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -49,7 +57,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['file'],
+        'handlers': ['console', 'file'],
         'level': 'INFO',
     },
 }

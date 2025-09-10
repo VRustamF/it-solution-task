@@ -13,8 +13,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'app_quotes.apps.AppQuotesConfig',
-
-    'django_extensions',
 ]
 
 MIDDLEWARE = [
